@@ -95,6 +95,10 @@ client.on("message", (msg) => {
     console.log(msg.body);
     if (msg.body === "Hola") {
         msg.reply("Hola, muy buen día en que puedo ayudarte");
+        client.getChats().then((chats) => {
+            console.log(chats[0])
+        })
+    
     } else if (msg.body === "Buenos días") {
         // msg.sendMessage(msg.from, "Buenos días en que puedo ayudarte");
         msg.reply("Buenos días en que puedo ayudarte");
@@ -300,9 +304,6 @@ app.post("/enviar-archivo", async (req, res) => {
 })
 
 
-
-
-
 const buscarGrupoPorNombre = async (req, res) => {
     const grupo = await client.getChats().then((chats) => {
         return chats.find(
@@ -313,32 +314,65 @@ const buscarGrupoPorNombre = async (req, res) => {
     return grupo;
 };
 
-app.post("/send-group-message", [
-        body("id").custom((value, {
-            req
-        }) => {
-            if (!value && !req.body.name) {
-                throw new Error("Invalid value, you can use `ID` or `name`");
-            }
-            return true;
-        }),
-        body("message").notEmpty(),
-    ],
-    async (req, res) => {
-        const errores = validationResult(req).formatWith(({
-            msg
-        }) => {
-            return msg;
-        });
 
-        if (!errores.isEmpty()) {
+/**
+ * Enviar mensaje por grupo de whatsapp--------------------------------------------->
+ */
+app.post("/enviarMensajeEnGrupo", [
+    body("id").custom((value, {
+        req
+    }) => {
+        if (!value && !req.body.name) {
+            throw new Error("Invalid value, you can use `ID` or `name`");
+        }
+        return true;
+    }),
+    body("message").notEmpty(),
+], async (req, res) => {
+    const errores = validationResult(req).formatWith(({
+        msg
+    }) => {
+        return msg;
+    });
+
+    if (!errores.isEmpty()) {
+        return res.status(422).json({
+            status: false,
+            message: errores.mapped(),
+        });
+    }
+
+    let chatId = req.body.id;
+    const groupName = req.body.name;
+    const message = req.body.message;
+
+    if (!chatId) {
+        const group = await buscarGrupoPorNombre(groupName);
+        if (!group) {
             return res.status(422).json({
                 status: false,
-                message: errores.mapped(),
+                message: 'NO group found with name:',
+                groupName,
             });
         }
+        chatId = group.id._serialized;
     }
-);
+
+    client.sendMessage(chatId, message)
+        .then((response) => {
+            res.status(200).json({
+                status: true,
+                response: response,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: false,
+                response: err,
+            });
+        });
+
+});
 
 
 /**
