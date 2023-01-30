@@ -1,9 +1,15 @@
-.vscode/
-.wwebjs_auth/
-app.js
-config/
-index.html
-node_modules/
-nodemon.json
+node_modules
+whatsapp-session*.json
 package-lock.json
-package.json
+downloaded-media/
+.wwebjs_auth
+
+# .vscode/
+# .wwebjs_auth/
+# app.js
+# config/
+# index.html
+# node_modules/
+# nodemon.json
+# package-lock.json
+# package.json
