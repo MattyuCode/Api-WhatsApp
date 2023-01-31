@@ -95,6 +95,7 @@ client.on("message", (msg) => {
     console.log(msg.body);
     if (msg.body === "Hola") {
         msg.reply("Hola, muy buen día en que puedo ayudarte");
+       
         client.getChats().then((chats) => {
             console.log(chats[0])
         })
