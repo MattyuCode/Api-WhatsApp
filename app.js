@@ -13,7 +13,7 @@ const {
     formatoNumeroTelefono
 } = require("./config/formatoNumero");
 
-// Imports
+
 const express = require("express");
 const socketIo = require("socket.io");
 const qrcode = require("qrcode");
@@ -23,7 +23,7 @@ const fileUpload = require("express-fileupload");
 const axios = require("axios");
 const mime = require("mime-types");
 
-//Declarations of variables
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -37,22 +37,11 @@ app.use(
     })
 );
 
-// const SESSION_FILE_PATH = "./whatsapp-session.json";
-// let sessionCfg;
-// if (fs.existsSync(SESSION_FILE_PATH)) {
-//     sessionCfg = require(SESSION_FILE_PATH);
-// }
-
 app.use(fileUpload({
     debug: false
 }));
 
 app.get("/", (req, res) => {
-    // res.status(200).json({
-    //     status: true,
-    //     message: 'Bienvenido a WhatsApp 👏🤣❤'
-    // })
-
     res.sendFile("index.html", {
         root: __dirname,
     });
@@ -70,51 +59,29 @@ const client = new Client({
             "--disable-gpu",
         ],
     },
-    // session: sessionCfg,
     authStrategy: new LocalAuth(),
 });
-
-// client.on("qr", (qr) => {
-//     console.log("QR received", qr);
-//     // qrcode.generate(qr);
-// });
-
-// client.on("authenticated", (session) => {
-//     console.log("Authenticated", session);
-//     sessionCfg = session;
-//     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-//         if (err) {
-//             console.error(err);
-//         }
-//     });
-// });
 
 client.on("message", (msg) => {
     console.log(msg.body);
     if (msg.body === "Hola") {
         msg.reply("Hola, muy buen día en que puedo ayudarte");
-       
+
         client.getChats().then((chats) => {
             console.log(chats[0])
         })
-    
-    } else if (msg.body === "Buenos días") {
-        // msg.sendMessage(msg.from, "Buenos días en que puedo ayudarte");
-        msg.reply("Buenos días en que puedo ayudarte");
 
-        // si es en grupos donde se verifica el numero de telefono
+    } else if (msg.body === "Buenos días") {
+        msg.reply("Buenos días en que puedo ayudarte");
     } else if (msg.body === "!groups") {
         client
             .getChats()
             .then((chats) => {
-                //se buscar los chats si es en grupos
                 const grupos = chats.filter((m) => m.isGroup);
-
                 if (grupos.length === 0) {
                     msg.reply("No hay grupos");
                 } else {
                     let responderMensaje = "TUS GRUPOS\n\n";
-                    //para buscar los grupos con el nombre y le ID
                     grupos.forEach((grupo, i) => {
                         responderMensaje += `ID: ${grupo.id._serialized}\nName: ${grupo.name}\n\n`;
                     });
@@ -125,16 +92,11 @@ client.on("message", (msg) => {
             })
             .catch((err) => console.error(err));
     }
-
-    /*//¡NOTA!
-          DESCOMENTE EL GUIÓN A CONTINUACIÓN SI DESEA GUARDAR LOS ARCHIVOS DE MEDIOS DEL MENSAJE
-          Descarga de medios*/
 });
 
 client.initialize();
 
-//Con Socket IO
-// io.on("connection", function (socket) {
+
 io.on("connection", (socket) => {
     socket.emit("message", "Conectando....!");
 
@@ -146,25 +108,12 @@ io.on("connection", (socket) => {
         });
     });
 
-    //Para concectar el cliente
     client.on("ready", () => {
         console.log("Usuario conectado");
         socket.emit("ready", "WhatsApp está listo");
         socket.emit("message", "Usuario conectado");
     });
 
-    // //para guardar el authentication del cliente
-    // client.on("authenticated", (session) => {
-    //     socket.emit("ready", "WhatsApp está autenticado");
-    //     socket.emit("message", "WhatsApp está autenticado");
-    //     console.log("Authenticated", session);
-    //     sessionCfg = session;
-    //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-    //         if (err) {
-    //             console.error(err);
-    //         }
-    //     });
-    // });
 
     //Para autenticación el WhatasApp
     client.on("authenticated", () => {
@@ -192,31 +141,6 @@ const verNumeroRegistrado = async (numero) => {
     return esRegistrado;
 };
 
-//Enviar mensajes por POST
-// app.post('/send', (req, res) => {
-//     console.log(req.body);
-//     // io.emit("message", req.body);
-
-//     const numero = req.body.numero;
-//     const mensajes = req.body.mensajes;
-
-//     client
-//         .sendMessage(numero, mensajes)
-//         .then((response) => {
-//             res.status(200).json({
-//                 status: true,
-//                 response: response,
-//                 // message: "Mensaje enviado",
-//             });
-//         })
-//         .catch((err) => {
-//             res.status(500).json({
-//                 status: false,
-//                 response: err,
-//             });
-//         });
-// });
-
 /**
  * Enviar mensajes por POST------------------------------------------>
  */
@@ -230,12 +154,10 @@ app.post(
             return msg;
         });
 
-        //validamos si es diferente de vacio
         if (!errores.isEmpty()) {
             return res.status(422).json({
                 status: false,
-                message: errores.mapped(),
-                // message: "No se puede conectar",
+                message: errores.mapped()
             });
         }
 
@@ -243,7 +165,6 @@ app.post(
         const message = req.body.message;
         const esNumeroRegistrado = await verNumeroRegistrado(number);
 
-        // Si esNumeroRegistrado es falso || osea que si el numero no esta registrado todavia
         if (!esNumeroRegistrado) {
             return res.status(422).json({
                 status: false,
@@ -299,7 +220,6 @@ app.post("/enviar-archivo", async (req, res) => {
                 response: err,
             });
         });
-
 })
 
 
@@ -370,7 +290,6 @@ app.post("/enviarMensajeEnGrupo", [
                 response: err,
             });
         });
-
 });
 
 
