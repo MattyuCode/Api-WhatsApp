@@ -1,5 +1,3 @@
-// view https://www.youtube.com/watch?v=IRRiN2ZQDc8&list=PLIw7PfYokmfkn2GwHQcfNxZ-s3yk4HopN&index=2
-// Importaciones de la library
 const {
     Client,
     MessageMedia,
