@@ -7,7 +7,7 @@
 ### Link de la documentación 
 👀👉➡ [https://mattyucode.github.io/docusaurus_web/docs/API_WhatsApp-webjs/APIWhatsappwebjs](https://mattyucode.github.io/docusaurus_web/docs/API_WhatsApp-webjs/APIWhatsappwebjs)
 
-### ¡Cosa importante!
+## ¡Cosa importante!
 
 Debido a que Whatsapp se actualiza periódicamente, debemos usar siempre **la última versión de whatsapp-web.js**. Pueden ocurrir algunos errores con las versiones anteriores, así que intente actualizar la versión de la biblioteca antes de crear un problema.
 
