@@ -14,7 +14,7 @@ Debido a que Whatsapp se actualiza periódicamente, debemos usar siempre **la ú
 - Entrar al directorio del proyecto
 - Ejecute `npm install`
 - Ejecute `npm run start:dev`
-- Abra el navegador y vaya a la dirección `http://localhost:6060`
+- Abra el navegador y vaya a la dirección [http://localhost:6060](http://localhost:6060)
 - Escanea el código QR
 - ¡Disfrutar!
 
@@ -24,16 +24,16 @@ Puede enviar el mensaje a cualquier grupo utilizando `chatID` o grupo `name`, ch
 
 **Parámetros:**
 
-- `id` (opcional si se da el nombre): el ID del chat
-- `name` (opcional): nombre del grupo
+- `id`: el ID del chat
+- `name` : nombre del grupo
 - `mensaje`: el mensaje
 
-Aquí el punto final: `/send-group-message`
+Aquí el punto final: `/enviarMensajeEnGrupo`
 
 Aquí la forma de obtener la información de los grupos (incluyendo ID y nombre):
 
-- Enviar un mensaje al número de API `!groups`
-- La API responderá con la información de los grupos.
+- Enviar un mensaje al número de API `grupos o Grupos o Ver grupos`
+- La API responderá con la información de los grupos, mostrando el nombre del grupo y el ID.
 - Use la identificación para enviar un mensaje
 
 ### Descargando medios
