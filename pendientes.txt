@@ -1,0 +1,234 @@
+Query Encabezado:
+
+Correlativo Interno:			CORRELATIVO_INTERNO
+
+Serie:					SERIE_FISICO
+No:					NO_FISICO
+
+DATOS DEL VENDEDOR
+Nit:					NIT_VENDEDOR
+Razon Social:				RAZON_SOCIAL
+Nombre del establecimiento comercial:	NOMBRE_VENDEDOR
+Direccion: 				DIRECCION_VENDEDOR
+
+DATOS DE LA FACTURA:
+Numero de autorizacion:			NUMERO_AUTORIZACION
+fecha documento: 			FECHA
+fecha y hora de certificacion:		FECHAHORA_CERTIFICACION
+moneda:					MONEDA
+
+
+DATOS DEL COMPRADOR
+Nit:					NIT
+nombre razon social: 			NOMBRE_CLIENTE
+Direccion:				DIRECCION
+Codigo cliente: 			NO_CLIENTE_FA
+Codigo region:				REGION***
+Condiciones de pago:			DESCRIPCION*
+Direccion de entrega:			DIRECCION_ENTREGA
+no pedido:				NO_FACTU
+Fecha vencimiento:			FECHA_VENCE
+
+--------------------
+Agregar los de mas campo
+copiar solo el de la vista en el codigo
+hacer los de más campo en el modelo
+traer los datos en el html
+
+
+select 
+                             centrod,
+                             tipo_doc, 
+                             no_factu, 
+                             fisico, 
+                             no_fisico, 
+                             serie_fisico, 
+                             grupo_fa, 
+                             no_cliente_fa,
+                             nombre_cliente, 
+                             s_moneda, 
+                             dia, 
+                             mes, 
+                             anio, 
+                             fecha, 
+                             total, 
+                             concepto, 
+                             moneda, 
+                             direccion, 
+                             observ1, 
+                             nit, 
+                             no_pedido, 
+                             dias_credito,
+                             no_vendedor, 
+                             fecha_vence, 
+                             fob, 
+                             seguro, 
+                             flete, 
+                             cif, 
+                             tipo_cambio, 
+                             descripcion, 
+                             observaciones, 
+                             descuento, 
+                             tot_lin, 
+                             correlativo_interno,
+                             total_bruto, 
+                             nit_vendedor, 
+                             razon_social, 
+                             nombre_vendedor, 
+                             direccion_vendedor, 
+                             numero_autorizacion, 
+                             fechahora_certificacion, 
+                             region,
+                             direccion_entrega
+                             from vw_enviofacturas where no_cia = '10' and no_factu = '3363640115'
+
+-----------------------------query anterior----------------------------------------------
+select	fa.no_cia,
+                            fa.centrod,
+                            fa.tipo_doc,
+                            fa.no_factu,
+                            fa.no_fisico || ' - ' || fa.serie_fisico fisico, 
+                            fa.grupo grupo_fa,
+                            fa.no_cliente no_cliente_fa,
+                            --	mc.nombre_largo nombre_cliente,
+                            decode(pv.cod_cliente,'01-999999',pv.nombre_cliente,mc.nombre_largo) nombre_cliente,
+                            moneda.simbolo(fa.no_cia, fa.moneda) s_moneda,
+                            to_char(fa.fecha, 'dd') dia,
+                            to_char(fa.fecha, 'mm') mes,
+                            to_char(fa.fecha, 'yyyy') anio,
+                            fa.fecha,
+                            fa.total,
+                            fa.concepto,
+                            fa.moneda,
+                            REPLACE(REPLACE(REPLACE(mc.direccion,CHR(10),' ') ,CHR(13),' ') ,'  ',' ')direccion,
+                            fa.observ1,
+                            decode(mc.tipo_cliente,'02',mc.cedula,idtributario.formatea(mc.tipo_id_tributario,mc.cedula)) nit,
+                            fa.no_pedido,
+                            'CREDITO '||to_char(mc.plazo)||decode(nvl(mc.plazo,0),0,' ',' días')
+                            dias_credito,
+                            fa.no_vendedor,
+                            fa.fecha+nvl(mc.plazo,0) fecha_vence,
+                            --pv.observaciones,
+                            pv.fob, pv.seguro, pv.flete, pv.cif, pv.tipo_cambio,
+                            tp.descripcion,
+                            decode(nvl(pv.observaciones,'.'),'.','.','Observaciones: '||pv.observaciones) observaciones,
+                            fa.descuento, fa.tot_lin, pv.correlativo_interno,
+                            pv.total_bruto
+                            from	arfafe fa,
+                            arccmc mc,
+                            pvencabezado_movimientos pv,
+                            pvtipos_pago tp
+                            where	fa.no_cia		= '10'  
+                            and pv.no_cia=tp.no_cia             
+                            and pv.tipo_pago=tp.tipo_pago       
+                            and fa.no_factu	= '3365160115'	    
+                            and fa.no_cia   = mc.no_cia	    
+                            and fa.grupo	= mc.grupo	
+                            and fa.no_cliente = mc.no_cliente 
+                            and fa.no_factu  = pv.no_transa_mov 
+                            and fa.no_cia   = pv.no_cia
+                            order by	lpad(fa.no_fisico,12,'0'), fa.serie_fisico
+
+-------------------------script de la vista---------------------------------------  
+DROP VIEW PROGRAMADOR3.VW_ENVIOFACTURAS;
+
+CREATE OR REPLACE FORCE VIEW PROGRAMADOR3.VW_ENVIOFACTURAS
+(NO_CIA, CENTROD, TIPO_DOC, NO_FACTU, FISICO, 
+ NO_FISICO, SERIE_FISICO, GRUPO_FA, NO_CLIENTE_FA, NOMBRE_CLIENTE, 
+ S_MONEDA, DIA, MES, ANIO, FECHA, 
+ TOTAL, CONCEPTO, MONEDA, DIRECCION, OBSERV1, 
+ NIT, NO_PEDIDO, DIAS_CREDITO, NO_VENDEDOR, FECHA_VENCE, 
+ FOB, SEGURO, FLETE, CIF, TIPO_CAMBIO, 
+ DESCRIPCION, OBSERVACIONES, DESCUENTO, TOT_LIN, CORRELATIVO_INTERNO, 
+ TOTAL_BRUTO, NIT_VENDEDOR, RAZON_SOCIAL, NOMBRE_VENDEDOR, DIRECCION_VENDEDOR, 
+ NUMERO_AUTORIZACION, FECHAHORA_CERTIFICACION, REGION, DIRECCION_ENTREGA)
+AS 
+select	fa.no_cia,
+                            fa.centrod,
+                            fa.tipo_doc,
+                            fa.no_factu,
+                            fa.no_fisico || ' - ' || fa.serie_fisico fisico, 
+                            fa.no_fisico,
+                            fa.serie_fisico ,
+                            fa.grupo grupo_fa,
+                            fa.no_cliente no_cliente_fa,
+                            --	mc.nombre_largo nombre_cliente,
+                            decode(pv.cod_cliente,'01-999999',pv.nombre_cliente,mc.nombre_largo) nombre_cliente,
+                            moneda.simbolo(fa.no_cia, fa.moneda) s_moneda,
+                            to_char(fa.fecha, 'dd') dia,
+                            to_char(fa.fecha, 'mm') mes,
+                            to_char(fa.fecha, 'yyyy') anio,
+                            fa.fecha,
+                            fa.total,
+                            fa.concepto,
+                            fa.moneda,
+                            REPLACE(REPLACE(REPLACE(mc.direccion,CHR(10),' ') ,CHR(13),' ') ,'  ',' ')direccion,
+                            fa.observ1,
+                            decode(mc.tipo_cliente,'02',mc.cedula,idtributario.formatea(mc.tipo_id_tributario,mc.cedula)) nit,
+                              NVL(fa.no_pedido, 'No disponible') no_pedido,
+                            --  fa.no_pedido,
+                            'CREDITO '||to_char(mc.plazo)||decode(nvl(mc.plazo,0),0,' ',' días')
+                            dias_credito,
+                            fa.no_vendedor,
+                            fa.fecha+nvl(mc.plazo,0) fecha_vence,
+                            --pv.observaciones,
+                            pv.fob, pv.seguro, pv.flete, pv.cif, pv.tipo_cambio,
+                            tp.descripcion,
+                            decode(nvl(pv.observaciones,'.'),'.','.','Observaciones: '||pv.observaciones) observaciones,
+                            fa.descuento, fa.tot_lin, pv.correlativo_interno,
+                            pv.total_bruto,
+                            e.id_tributario NIT_vendedor,
+                            e.nombre_largo razon_social,
+                            e.nombre Nombre_vendedor,
+                            e.direccion direccion_vendedor,
+                            f.uuid_certificado numero_autorizacion,
+                            f.fechahora_certificacion,
+                            'NO DISPONIBLE EN LA DB'  REGION, 
+                            'NO DISPONIBLE EN LA DB'  direccion_entrega 
+                            from	arfafe fa,
+                            arccmc mc,
+                            pvencabezado_movimientos pv,
+                            pvtipos_pago tp, arcgmc e,
+                            PVFACTURAENLINEA f
+                            where	fa.no_cia		= '10'  
+                           and                      pv.no_cia=tp.no_cia             
+                            and pv.tipo_pago=tp.tipo_pago   
+                            and fa.no_cia = e.no_cia                                
+                            and fa.no_factu	= '3363640115'	    
+                            and fa.no_cia   = mc.no_cia	    
+                            and fa.grupo	= mc.grupo	
+                            and fa.no_cliente = mc.no_cliente 
+                            and fa.no_factu  = pv.no_transa_mov 
+                            and fa.no_cia   = pv.no_cia
+                            and fa.no_cia = f.no_cia
+                            and fa.no_factu = f.no_docu
+                            and f.ind_anulacion = decode(fa.ind_anu_dev,'A','S','N')
+                            order by	lpad(fa.no_fisico,12,'0'), fa.serie_fisico;
+
+
+
+
+
+
+
+----
+
+Detalle
+Cant			CANTIDAD
+unidad			UNIDAD_MEDIDA
+descripcion		DESCRIPCION
+codigo			CODART
+precio unitario		PRECIO
+descuento		DESCUENTO_DET
+total			TOTAL_DET
+impuesto		IMP_INCLUIDO
+
+
+
+Modificar controlador para:
+- Luego de generar
+- Enviar por correo | no tiene email
+- Marcar como ind_enviada = 'S' | no actualiza
+- Probar con otras compañias
+
+
