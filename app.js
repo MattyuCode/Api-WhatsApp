@@ -1,3 +1,4 @@
+
 // view https://www.youtube.com/watch?v=IRRiN2ZQDc8&list=PLIw7PfYokmfkn2GwHQcfNxZ-s3yk4HopN&index=2
 // Importaciones de la librerias
 const {
@@ -20,7 +21,6 @@ const express = require("express");
 const socketIo = require("socket.io");
 const qrcode = require("qrcode");
 const http = require("http");
-const fs = require("fs");
 const fileUpload = require("express-fileupload");
 const axios = require("axios");
 const mime = require("mime-types");
