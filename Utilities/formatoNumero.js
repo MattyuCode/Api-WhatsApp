@@ -12,6 +12,4 @@ const formatoNumeroTelefono = (number) => {
     return formateado;
 }
 
-module.exports = {
-    formatoNumeroTelefono
-}
+export { formatoNumeroTelefono };
