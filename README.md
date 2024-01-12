@@ -3,6 +3,9 @@
 <img src="img/image.png" alt="">
  
 
+## Documentación para guiarse
+### Link de la documentación 
+👀👉➡ [https://mattyucode.github.io/docusaurus_web/docs/API_WhatsApp-webjs/APIWhatsappwebjs](https://mattyucode.github.io/docusaurus_web/docs/API_WhatsApp-webjs/APIWhatsappwebjs)
 
 ## ¡Cosa importante!
 
@@ -43,3 +46,12 @@ Agrego un ejemplo para descargar los medios del mensaje, si existe. ¡Compruébe
 Usamos el paquete `mime-types` para obtener la extensión del archivo por su tipo mime, para que podamos descargar todo el tipo de mensaje multimedia.
 
 Y decidimos (para este ejemplo) usar el tiempo como nombre de archivo, porque no es seguro que exista el nombre del archivo multimedia.
+
+
+
+### Versión con la que esta publicado en CRPM
+```
+"whatsapp-web.js": "^1.22.2-alpha.0"
+
+```
+

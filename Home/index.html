@@ -2,11 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhatsApp API</title>
-    <link rel="shortcut icon" href="https://static.whatsapp.net/rsrc.php/v3/yz/r/ujTY9i_Jhs1.png">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API WhatsApp - CORPACAM</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
@@ -72,15 +71,7 @@
             color: green;
         }
     </style>
-
 </head>
-<!-- 
-50255135934
-En que te podemos ayudar, nuestros servicios estan entre 8 am a 18 horas
-ver los videso siguientes
-crear los de duplicate
-y ver lo del grupo
- -->
 
 <body>
     <div class="container" id="app">
@@ -92,39 +83,10 @@ y ver lo del grupo
         <ul class="logs"></ul>
         <ul class="chats"></ul>
     </div>
-
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" crossorigin="anonymous"></script>  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js" crossorigin="anonymous"></script>
-
     <script>
-        // $(document).ready(function () {
-        //     var socket = io.connect('http://localhost:6060', {
-        //         path: '/socket.io'
-        //     });
-
-        //     socket.on('message', function (msg) {
-        //         $('.logs').append($('<li>').text(msg));
-        //     });
-
-        //     socket.on('qr', function (src) {
-        //         $('#qrcode').attr('src', src);
-        //     });
-
-        //     socket.on('qr', function (src) {
-        //         $('#qrcode').attr('src', src);
-        //         $('#qrcode').show();
-        //     });
-
-        //     socket.on('ready', function (data) {
-        //         $('#qrcode').hide();
-        //     });
-
-        //     socket.on('authenticated', function (data) {
-        //         $('#qrcode').hide();
-        //     });
-        // });
-
         document.addEventListener("DOMContentLoaded", () => {
+            // let socket = io("https://apiw.corpacam.com.gt:6060", {
             let socket = io("http://localhost:6060", {
                 path: "/socket.io"
             });
